@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
+import Image from "next/image";
 
 // UI components
 import Transcript from "./components/Transcript";
@@ -429,8 +430,14 @@ function App() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-green-800 rounded-full flex items-center justify-center">
-                  <span className="text-yellow-400 font-bold text-lg">🍽️</span>
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center p-1 shadow-md">
+                  <Image 
+                    src="/uh_logo.svg" 
+                    alt="UrbanHarvest Zaika Logo" 
+                    width={32} 
+                    height={32}
+                    className="w-8 h-8"
+                  />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-green-800">UrbanHarvest Zaika</h1>

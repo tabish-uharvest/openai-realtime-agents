@@ -213,7 +213,17 @@ function Transcript({
           {/* Welcome Message if no conversation yet */}
           {transcriptItems.length === 0 && (
             <div className="text-center py-12">
-              <div className="text-6xl mb-4">🍽️</div>
+              <div className="flex justify-center mb-6">
+                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center p-2 shadow-lg border-4 border-yellow-200">
+                  <Image 
+                    src="/uh_logo.svg" 
+                    alt="UrbanHarvest Zaika Logo" 
+                    width={60} 
+                    height={60}
+                    className="w-14 h-14"
+                  />
+                </div>
+              </div>
               <h3 className="text-xl font-bold text-green-800 mb-2">
                 Welcome to UrbanHarvest Zaika!
               </h3>
