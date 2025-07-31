@@ -32,68 +32,58 @@ function Events({ isExpanded }: EventsProps) {
   }, [loggedEvents, isExpanded]);
 
   return (
-    <div
-      className={
-        (isExpanded ? "w-1/2 overflow-auto" : "w-0 overflow-hidden opacity-0") +
-        " transition-all rounded-xl duration-200 ease-in-out flex-col bg-white"
-      }
-      ref={eventLogsContainerRef}
-    >
-      {isExpanded && (
-        <div>
-          <div className="flex items-center justify-between px-6 py-3.5 sticky top-0 z-10 text-base border-b bg-white rounded-t-xl">
-            <span className="font-semibold">Logs</span>
-          </div>
-          <div>
-            {loggedEvents.map((log, idx) => {
-              const arrowInfo = getDirectionArrow(log.direction);
-              const isError =
-                log.eventName.toLowerCase().includes("error") ||
-                log.eventData?.response?.status_details?.error != null;
+    <div className="bg-gray-50 rounded-lg border overflow-hidden">
+      <div className="bg-gray-100 px-4 py-2 border-b">
+        <span className="font-medium text-gray-700 text-sm">Debug Events</span>
+      </div>
+      <div className="max-h-48 overflow-y-auto p-2">
+        {loggedEvents.slice(-10).map((log, idx) => {
+          const arrowInfo = getDirectionArrow(log.direction);
+          const isError =
+            log.eventName.toLowerCase().includes("error") ||
+            log.eventData?.response?.status_details?.error != null;
 
-              return (
-                <div
-                  key={`${log.id}-${idx}`}
-                  className="border-t border-gray-200 py-2 px-6 font-mono"
-                >
-                  <div
-                    onClick={() => toggleExpand(log.id)}
-                    className="flex items-center justify-between cursor-pointer"
+          return (
+            <div
+              key={`${log.id}-${idx}`}
+              className="border-b border-gray-200 py-2 font-mono"
+            >
+              <div
+                onClick={() => toggleExpand(log.id)}
+                className="flex items-center justify-between cursor-pointer"
+              >
+                <div className="flex items-center flex-1">
+                  <span
+                    style={{ color: arrowInfo.color }}
+                    className="ml-1 mr-2 text-xs"
                   >
-                    <div className="flex items-center flex-1">
-                      <span
-                        style={{ color: arrowInfo.color }}
-                        className="ml-1 mr-2"
-                      >
-                      {arrowInfo.symbol}
-                      </span>
-                      <span
-                        className={
-                          "flex-1 text-sm " +
-                          (isError ? "text-red-600" : "text-gray-800")
-                        }
-                      >
-                        {log.eventName}
-                      </span>
-                    </div>
-                    <div className="text-gray-500 ml-1 text-xs whitespace-nowrap">
-                      {log.timestamp}
-                    </div>
-                  </div>
-
-                  {log.expanded && log.eventData && (
-                    <div className="text-gray-800 text-left">
-                      <pre className="border-l-2 ml-1 border-gray-200 whitespace-pre-wrap break-words font-mono text-xs mb-2 mt-2 pl-2">
-                        {JSON.stringify(log.eventData, null, 2)}
-                      </pre>
-                    </div>
-                  )}
+                    {arrowInfo.symbol}
+                  </span>
+                  <span
+                    className={
+                      "flex-1 text-xs " +
+                      (isError ? "text-red-600" : "text-gray-800")
+                    }
+                  >
+                    {log.eventName}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+                <div className="text-gray-500 ml-1 text-xs whitespace-nowrap">
+                  {log.timestamp}
+                </div>
+              </div>
+
+              {log.expanded && log.eventData && (
+                <div className="text-gray-800 text-left">
+                  <pre className="border-l-2 ml-1 border-gray-200 whitespace-pre-wrap break-words font-mono text-xs mb-2 mt-2 pl-2">
+                    {JSON.stringify(log.eventData, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

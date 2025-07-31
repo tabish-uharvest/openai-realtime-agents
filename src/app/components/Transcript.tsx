@@ -71,24 +71,24 @@ function Transcript({
   };
 
   return (
-    <div className="flex flex-col flex-1 bg-white min-h-0 rounded-xl">
+    <div className="flex flex-col h-full bg-white rounded-lg">
       <div className="flex flex-col flex-1 min-h-0">
-        <div className="flex items-center justify-between px-6 py-3 sticky top-0 z-10 text-base border-b bg-white rounded-t-xl">
-          <span className="font-semibold">Transcript</span>
+        <div className="flex items-center justify-between px-6 py-4 sticky top-0 z-10 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-t-lg">
+          <span className="font-bold text-green-800 text-lg">Order Conversation</span>
           <div className="flex gap-x-2">
             <button
               onClick={handleCopyTranscript}
-              className="w-24 text-sm px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 flex items-center justify-center gap-x-1"
+              className="restaurant-button-secondary text-sm px-3 py-1 flex items-center justify-center gap-x-1"
             >
               <ClipboardCopyIcon />
               {justCopied ? "Copied!" : "Copy"}
             </button>
             <button
               onClick={downloadRecording}
-              className="w-40 text-sm px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 flex items-center justify-center gap-x-1"
+              className="restaurant-button-secondary text-sm px-3 py-1 flex items-center justify-center gap-x-1"
             >
               <DownloadIcon />
-              <span>Download Audio</span>
+              <span>Audio</span>
             </button>
           </div>
         </div>
@@ -96,7 +96,7 @@ function Transcript({
         {/* Transcript Content */}
         <div
           ref={transcriptRef}
-          className="overflow-auto p-4 flex flex-col gap-y-4 h-full"
+          className="overflow-auto p-6 flex flex-col gap-y-4 h-full bg-gray-50"
         >
           {[...transcriptItems]
             .sort((a, b) => a.createdAtMs - b.createdAtMs)
@@ -122,8 +122,10 @@ function Transcript({
               const containerClasses = `flex justify-end flex-col ${
                 isUser ? "items-end" : "items-start"
               }`;
-              const bubbleBase = `max-w-lg p-3 ${
-                isUser ? "bg-gray-900 text-gray-100" : "bg-gray-100 text-black"
+              const bubbleBase = `max-w-lg p-4 rounded-xl shadow-md ${
+                isUser 
+                  ? "bg-green-800 text-white" 
+                  : "bg-white text-gray-800 border-2 border-yellow-200"
               }`;
               const isBracketedMessage =
                 title.startsWith("[") && title.endsWith("]");
@@ -207,10 +209,28 @@ function Transcript({
               );
             }
           })}
+          
+          {/* Welcome Message if no conversation yet */}
+          {transcriptItems.length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">🍽️</div>
+              <h3 className="text-xl font-bold text-green-800 mb-2">
+                Welcome to UrbanHarvest Zaika!
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Start your voice order by clicking "Start Voice Order" above, or type your message below.
+              </p>
+              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 max-w-md mx-auto">
+                <p className="text-sm text-green-800">
+                  <strong>Try saying:</strong> "Namaste, I'd like to order food" or "Ek masala dosa chahiye"
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="p-4 flex items-center gap-x-2 flex-shrink-0 border-t border-gray-200">
+      <div className="p-4 flex items-center gap-x-3 flex-shrink-0 border-t-2 border-yellow-200 bg-white rounded-b-lg">
         <input
           ref={inputRef}
           type="text"
@@ -221,15 +241,15 @@ function Transcript({
               onSendMessage();
             }
           }}
-          className="flex-1 px-4 py-2 focus:outline-none"
-          placeholder="Type a message..."
+          className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
+          placeholder="Type your order or message here..."
         />
         <button
           onClick={onSendMessage}
           disabled={!canSend || !userText.trim()}
-          className="bg-gray-900 text-white rounded-full px-2 py-2 disabled:opacity-50"
+          className="restaurant-button disabled:opacity-50 disabled:cursor-not-allowed px-4 py-3"
         >
-          <Image src="arrow.svg" alt="Send" width={24} height={24} />
+          <Image src="arrow.svg" alt="Send" width={20} height={20} />
         </button>
       </div>
     </div>

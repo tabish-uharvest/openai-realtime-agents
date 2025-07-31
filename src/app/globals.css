@@ -3,15 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --background: #fafafa;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #ffffff;
+  --foreground: #000000;
+  --primary-yellow: #ffb600;
+  --primary-green: #1c4e38;
+  --restaurant-bg: #fafafa;
 }
 
 body {
@@ -19,4 +15,113 @@ body {
   background: var(--background);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+/* Restaurant Theme Styles */
+.restaurant-header {
+  background: linear-gradient(135deg, var(--primary-yellow) 0%, #ffc933 100%);
+  color: var(--primary-green);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.restaurant-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border: 2px solid rgba(255, 182, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  border-color: var(--primary-yellow);
+}
+
+.restaurant-button {
+  background: var(--primary-green);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.restaurant-button:hover {
+  background: #0f3529;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(28, 78, 56, 0.4);
+}
+
+.restaurant-button-secondary {
+  background: var(--primary-yellow);
+  color: var(--primary-green);
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid var(--primary-yellow);
+  padding: 10px 22px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.restaurant-button-secondary:hover {
+  background: var(--primary-green);
+  color: white;
+  border-color: var(--primary-green);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 182, 0, 0.4);
+}
+
+.restaurant-status-connected {
+  color: #16a34a;
+  background: #dcfce7;
+  border: 2px solid #16a34a;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.restaurant-status-disconnected {
+  color: #dc2626;
+  background: #fef2f2;
+  border: 2px solid #dc2626;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.restaurant-status-connecting {
+  color: var(--primary-yellow);
+  background: #fffbeb;
+  border: 2px solid var(--primary-yellow);
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.restaurant-transcript {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 182, 0, 0.3);
+}
+
+.pulse-animation {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
 }

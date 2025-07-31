@@ -3,12 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 
-import Image from "next/image";
-
 // UI components
 import Transcript from "./components/Transcript";
 import Events from "./components/Events";
-import BottomToolbar from "./components/BottomToolbar";
 
 // Types
 import { SessionStatus } from "@/app/types";
@@ -425,117 +422,183 @@ function App() {
   const agentSetKey = searchParams.get("agentConfig") || "default";
 
   return (
-    <div className="text-base flex flex-col h-screen bg-gray-100 text-gray-800 relative">
-      <div className="p-5 text-lg font-semibold flex justify-between items-center">
-        <div
-          className="flex items-center cursor-pointer"
-          onClick={() => window.location.reload()}
-        >
-          <div>
-            <Image
-              src="/openai-logomark.svg"
-              alt="OpenAI Logo"
-              width={20}
-              height={20}
-              className="mr-2"
-            />
-          </div>
-          <div>
-            Realtime API <span className="text-gray-500">Agents</span>
-          </div>
-        </div>
-        <div className="flex items-center">
-          <label className="flex items-center text-base gap-1 mr-2 font-medium">
-            Scenario
-          </label>
-          <div className="relative inline-block">
-            <select
-              value={agentSetKey}
-              onChange={handleAgentChange}
-              className="appearance-none border border-gray-300 rounded-lg text-base px-2 py-1 pr-8 cursor-pointer font-normal focus:outline-none"
-            >
-              {Object.keys(allAgentSets).map((agentKey) => (
-                <option key={agentKey} value={agentKey}>
-                  {agentKey}
-                </option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-600">
-              <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path
-                  fillRule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 10.44l3.71-3.21a.75.75 0 111.04 1.08l-4.25 3.65a.75.75 0 01-1.04 0L5.21 8.27a.75.75 0 01.02-1.06z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {agentSetKey && (
-            <div className="flex items-center ml-6">
-              <label className="flex items-center text-base gap-1 mr-2 font-medium">
-                Agent
-              </label>
-              <div className="relative inline-block">
-                <select
-                  value={selectedAgentName}
-                  onChange={handleSelectedAgentChange}
-                  className="appearance-none border border-gray-300 rounded-lg text-base px-2 py-1 pr-8 cursor-pointer font-normal focus:outline-none"
-                >
-                  {selectedAgentConfigSet?.map((agent) => (
-                    <option key={agent.name} value={agent.name}>
-                      {agent.name}
-                    </option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-600">
-                  <svg
-                    className="h-4 w-4"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.23 7.21a.75.75 0 011.06.02L10 10.44l3.71-3.21a.75.75 0 111.04 1.08l-4.25 3.65a.75.75 0 01-1.04 0L5.21 8.27a.75.75 0 01.02-1.06z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Restaurant Header */}
+      <header className="restaurant-header">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-10 h-10 bg-green-800 rounded-full flex items-center justify-center">
+                  <span className="text-yellow-400 font-bold text-lg">🍽️</span>
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-green-800">UrbanHarvest Zaika</h1>
+                  <p className="text-green-700 text-sm">Voice Ordering System</p>
                 </div>
               </div>
             </div>
-          )}
+            
+            <div className="flex items-center space-x-4">
+              <div className={`${
+                sessionStatus === "CONNECTED" ? "restaurant-status-connected" :
+                sessionStatus === "CONNECTING" ? "restaurant-status-connecting" :
+                "restaurant-status-disconnected"
+              }`}>
+                {sessionStatus === "CONNECTED" && "🟢 Connected"}
+                {sessionStatus === "CONNECTING" && "🟡 Connecting..."}
+                {sessionStatus === "DISCONNECTED" && "🔴 Disconnected"}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
 
-      <div className="flex flex-1 gap-2 px-2 overflow-hidden relative">
-        <Transcript
-          userText={userText}
-          setUserText={setUserText}
-          onSendMessage={handleSendTextMessage}
-          downloadRecording={downloadRecording}
-          canSend={
-            sessionStatus === "CONNECTED"
-          }
-        />
+      {/* Main Content Area */}
+      <main className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Order Conversation Area */}
+          <div className="lg:col-span-2">
+            <div className="restaurant-card p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-green-800">Your Order Conversation</h2>
+                <div className="flex items-center space-x-2">
+                  {sessionStatus === "CONNECTED" && (
+                    <span className="pulse-animation text-green-600">🎤 Listening...</span>
+                  )}
+                </div>
+              </div>
+              
+              {/* Transcript Component */}
+              <div className="restaurant-transcript min-h-[400px] max-h-[600px] overflow-y-auto">
+                <Transcript
+                  userText={userText}
+                  setUserText={setUserText}
+                  onSendMessage={handleSendTextMessage}
+                  downloadRecording={downloadRecording}
+                  canSend={sessionStatus === "CONNECTED"}
+                />
+              </div>
+            </div>
+          </div>
 
-        <Events isExpanded={isEventsPaneExpanded} />
-      </div>
+          {/* Control Panel */}
+          <div className="space-y-6">
+            
+            {/* Connection Control */}
+            <div className="restaurant-card p-6">
+              <h3 className="text-xl font-bold text-green-800 mb-4">Voice Assistant</h3>
+              <div className="space-y-4">
+                <button
+                  onClick={onToggleConnection}
+                  className={`w-full ${
+                    sessionStatus === "CONNECTED" || sessionStatus === "CONNECTING"
+                      ? "restaurant-button-secondary"
+                      : "restaurant-button"
+                  }`}
+                  disabled={sessionStatus === "CONNECTING"}
+                >
+                  {sessionStatus === "CONNECTED" && "Disconnect Assistant"}
+                  {sessionStatus === "CONNECTING" && "Connecting..."}
+                  {sessionStatus === "DISCONNECTED" && "🎤 Start Voice Order"}
+                </button>
+                
+                {sessionStatus === "CONNECTED" && (
+                  <div className="text-center p-4 bg-green-50 rounded-lg border-2 border-green-200">
+                    <p className="text-green-800 font-medium">Ready to take your order!</p>
+                    <p className="text-green-600 text-sm mt-1">
+                      Say "Namaste" or start with your order
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
 
-      <BottomToolbar
-        sessionStatus={sessionStatus}
-        onToggleConnection={onToggleConnection}
-        isPTTActive={isPTTActive}
-        setIsPTTActive={setIsPTTActive}
-        isPTTUserSpeaking={isPTTUserSpeaking}
-        handleTalkButtonDown={handleTalkButtonDown}
-        handleTalkButtonUp={handleTalkButtonUp}
-        isEventsPaneExpanded={isEventsPaneExpanded}
-        setIsEventsPaneExpanded={setIsEventsPaneExpanded}
-        isAudioPlaybackEnabled={isAudioPlaybackEnabled}
-        setIsAudioPlaybackEnabled={setIsAudioPlaybackEnabled}
-        codec={urlCodec}
-        onCodecChange={handleCodecChange}
-      />
+            {/* Push to Talk Mode */}
+            <div className="restaurant-card p-6">
+              <h3 className="text-lg font-bold text-green-800 mb-3">Talk Mode</h3>
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  id="ptt-toggle"
+                  checked={isPTTActive}
+                  onChange={(e) => setIsPTTActive(e.target.checked)}
+                  className="w-5 h-5 text-yellow-600 border-2 border-gray-300 rounded focus:ring-yellow-500"
+                />
+                <label htmlFor="ptt-toggle" className="text-gray-700 font-medium">
+                  Push-to-Talk Mode
+                </label>
+              </div>
+              
+              {isPTTActive && sessionStatus === "CONNECTED" && (
+                <div className="mt-4">
+                  <button
+                    onMouseDown={handleTalkButtonDown}
+                    onMouseUp={handleTalkButtonUp}
+                    onTouchStart={handleTalkButtonDown}
+                    onTouchEnd={handleTalkButtonUp}
+                    className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-200 ${
+                      isPTTUserSpeaking
+                        ? "bg-red-500 text-white shadow-lg transform scale-105"
+                        : "restaurant-button"
+                    }`}
+                  >
+                    {isPTTUserSpeaking ? "🔴 Recording..." : "🎤 Hold to Talk"}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Audio Controls */}
+            <div className="restaurant-card p-6">
+              <h3 className="text-lg font-bold text-green-800 mb-3">Audio Settings</h3>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="audio-playback"
+                    checked={isAudioPlaybackEnabled}
+                    onChange={(e) => setIsAudioPlaybackEnabled(e.target.checked)}
+                    className="w-5 h-5 text-yellow-600 border-2 border-gray-300 rounded focus:ring-yellow-500"
+                  />
+                  <label htmlFor="audio-playback" className="text-gray-700 font-medium">
+                    Audio Playback
+                  </label>
+                </div>
+                
+                <button
+                  onClick={downloadRecording}
+                  className="restaurant-button-secondary w-full"
+                  disabled={sessionStatus !== "CONNECTED"}
+                >
+                  📥 Download Recording
+                </button>
+              </div>
+            </div>
+
+            {/* Debug Panel (Optional) */}
+            <div className="restaurant-card p-6">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-bold text-green-800">Debug Info</h3>
+                <button
+                  onClick={() => setIsEventsPaneExpanded(!isEventsPaneExpanded)}
+                  className="text-yellow-600 hover:text-yellow-700 font-medium"
+                >
+                  {isEventsPaneExpanded ? "Hide" : "Show"}
+                </button>
+              </div>
+              
+              {isEventsPaneExpanded && (
+                <div className="max-h-48 overflow-y-auto">
+                  <Events isExpanded={true} />
+                </div>
+              )}
+            </div>
+
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
