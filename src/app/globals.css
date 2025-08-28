@@ -7,7 +7,10 @@
   --foreground: #000000;
   --primary-yellow: #ffb600;
   --primary-green: #1c4e38;
+  --primary-blue: #002C5B;
+  --accent-blue: #007CC7;
   --restaurant-bg: #fafafa;
+  --showroom-bg: #f8fafc;
 }
 
 body {
@@ -124,4 +127,114 @@ body {
   50% {
     opacity: .5;
   }
+}
+
+/* Showroom Theme Styles */
+.showroom-header {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 44, 91, 0.25);
+}
+
+.showroom-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 44, 91, 0.12);
+  border: 2px solid rgba(0, 124, 199, 0.2);
+  transition: all 0.3s ease;
+}
+
+.showroom-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 44, 91, 0.18);
+  border-color: var(--accent-blue);
+}
+
+.showroom-button {
+  background: var(--primary-blue);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.showroom-button:hover {
+  background: #001a3d;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 44, 91, 0.4);
+}
+
+.showroom-button-secondary {
+  background: var(--accent-blue);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid var(--accent-blue);
+  padding: 10px 22px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.showroom-button-secondary:hover {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 124, 199, 0.4);
+}
+
+.showroom-status-connected {
+  color: #16a34a;
+  background: #dcfce7;
+  border: 2px solid #16a34a;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.showroom-status-disconnected {
+  color: #dc2626;
+  background: #fef2f2;
+  border: 2px solid #dc2626;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.showroom-status-connecting {
+  color: var(--accent-blue);
+  background: #f0f9ff;
+  border: 2px solid var(--accent-blue);
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.showroom-transcript {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 44, 91, 0.1);
+  border: 1px solid rgba(0, 124, 199, 0.3);
+}
+
+.showroom-button-secondary {
+  background: white;
+  color: #002C5B;
+  border: 2px solid #007CC7;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.showroom-button-secondary:hover {
+  background: #007CC7;
+  color: white;
+  transform: translateY(-1px);
 }

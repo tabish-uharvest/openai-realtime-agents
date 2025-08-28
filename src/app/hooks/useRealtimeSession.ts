@@ -162,7 +162,7 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
   }, [updateStatus]);
 
   const assertconnected = () => {
-    if (!sessionRef.current) throw new Error('RealtimeSession not connected');
+    if (!sessionRef.current) throw new Error('Realtime Car Showroom Session not connected');
   };
 
   /* ----------------------- message helpers ------------------------- */
