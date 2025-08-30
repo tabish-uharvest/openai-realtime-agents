@@ -210,7 +210,7 @@ function Transcript({
                 }`}>
                   <Image 
                     src={agentType === 'showroom' ? "/hyundai_logo.svg" : "/uh_logo.svg"}
-                    alt={agentType === 'showroom' ? "Hyundai Capitol Showroom Logo" : "UrbanHarvest Zaika Logo"}
+                    alt={agentType === 'showroom' ? "Hyundai Capital Showroom Logo" : "UrbanHarvest Zaika Logo"}
                     width={60} 
                     height={60}
                     className="w-14 h-14"
@@ -221,7 +221,7 @@ function Transcript({
                 agentType === 'showroom' ? 'text-blue-800' : 'text-green-800'
               }`}>
                 {agentType === 'showroom' 
-                  ? 'Welcome to Hyundai Capitol Showroom!' 
+                  ? 'Welcome to Hyundai Capital Showroom!' 
                   : 'Welcome to UrbanHarvest Zaika!'}
               </h3>
               <p className="text-gray-600 mb-4">

@@ -3,8 +3,8 @@ import "./globals.css";
 import "./lib/envSetup";
 
 export const metadata: Metadata = {
-  title: "Urban Harvest Zaika",
-  description: "Realtime Ordering Agent.",
+  title: "Hyundai Capital Showroom",
+  description: "Realtime Helping Agent.",
 };
 
 export default function RootLayout({

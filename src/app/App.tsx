@@ -440,7 +440,7 @@ function App() {
   // Dynamic branding based on agent
   const isHyundaiShowroom = agentSetKey === 'hyundaiShowroom';
   const headerConfig = isHyundaiShowroom ? {
-    title: 'Hyundai Capitol Showroom',
+    title: 'Hyundai Capital Showroom',
     subtitle: 'PAVS Assistant',
     logo: '/hyundai_logo.svg',
     primaryColor: 'blue',
