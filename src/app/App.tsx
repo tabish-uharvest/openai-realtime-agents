@@ -7,6 +7,7 @@ import Image from "next/image";
 // UI components
 import Transcript from "./components/Transcript";
 import Events from "./components/Events";
+import { FullscreenButton } from "./components/FullscreenButton";
 
 // Types
 import { SessionStatus } from "@/app/types";
@@ -454,7 +455,51 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 touch-friendly-app">
+      {/* Global Touch-Friendly Styles */}
+      <style jsx global>{`
+        .touch-friendly-app {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          -webkit-touch-callout: none;
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+        }
+        
+        /* Allow text selection only in specific areas */
+        .touch-friendly-app input,
+        .touch-friendly-app textarea,
+        .touch-friendly-app [contenteditable],
+        .touch-friendly-app .selectable-text {
+          -webkit-user-select: text;
+          -moz-user-select: text;
+          -ms-user-select: text;
+          user-select: text;
+        }
+        
+        /* Touch-friendly buttons */
+        .touch-friendly-app button {
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+          min-height: 44px;
+          min-width: 44px;
+        }
+        
+        .touch-friendly-app button:active {
+          transform: scale(0.95);
+          transition: transform 0.1s ease;
+        }
+        
+        /* Transcript text should be selectable */
+        .touch-friendly-app .transcript-content {
+          -webkit-user-select: text;
+          -moz-user-select: text;
+          -ms-user-select: text;
+          user-select: text;
+        }
+      `}</style>
       {/* Dynamic Header */}
       <header className={isHyundaiShowroom ? "showroom-header" : "restaurant-header"}>
         <div className="container mx-auto px-6 py-4">
@@ -482,6 +527,7 @@ function App() {
             </div>
             
             <div className="flex items-center space-x-4">
+              <FullscreenButton />
               <div className={`${
                 sessionStatus === "CONNECTED" ? 
                   (isHyundaiShowroom ? "showroom-status-connected" : "restaurant-status-connected") :
@@ -546,7 +592,7 @@ function App() {
                 <div className="flex gap-x-2">
                   <button className={`${
                     isHyundaiShowroom ? 'showroom-button-secondary' : 'restaurant-button-secondary'
-                  } text-sm px-3 py-1 flex items-center justify-center gap-x-1`}>
+                  } text-sm px-4 py-2 flex items-center justify-center gap-x-2 min-h-[44px] touch-friendly-btn`}>
                     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 2V1H10V2H5ZM4.75 0C4.33579 0 4 0.335786 4 0.75V1H3.5C2.67157 1 2 1.67157 2 2.5V12.5C2 13.3284 2.67157 14 3.5 14H7V13H3.5C3.22386 13 3 12.7761 3 12.5V2.5C3 2.22386 3.22386 2 3.5 2H4V2.25C4 2.66421 4.33579 3 4.75 3H10.25C10.6642 3 11 2.66421 11 2.25V2H11.5C11.7761 2 12 2.22386 12 2.5V7H13V2.5C13 1.67157 12.3284 1 11.5 1H11V0.75C11 0.335786 10.6642 0 10.25 0H4.75ZM9 8.5C9 8.77614 8.77614 9 8.5 9C8.22386 9 8 8.77614 8 8.5C8 8.22386 8.22386 8 8.5 8C8.77614 8 9 8.22386 9 8.5ZM10.5 9C10.7761 9 11 8.77614 11 8.5C11 8.22386 10.7761 8 10.5 8C10.2239 8 10 8.22386 10 8.5C10 8.77614 10.2239 9 10.5 9ZM13 8.5C13 8.77614 12.7761 9 12.5 9C12.2239 9 12 8.77614 12 8.5C12 8.22386 12.2239 8 12.5 8C12.7761 8 13 8.22386 13 8.5ZM14.5 9C14.7761 9 15 8.77614 15 8.5C15 8.22386 14.7761 8 14.5 8C14.2239 8 14 8.22386 14 8.5C14 8.77614 14.2239 9 14.5 9ZM15 10.5C15 10.7761 14.7761 11 14.5 11C14.2239 11 14 10.7761 14 10.5C14 10.2239 14.2239 10 14.5 10C14.7761 10 15 10.2239 15 10.5ZM14.5 13C14.7761 13 15 12.7761 15 12.5C15 12.2239 14.7761 12 14.5 12C14.2239 12 14 12.2239 14 12.5C14 12.7761 14.2239 13 14.5 13ZM14.5 15C14.7761 15 15 14.7761 15 14.5C15 14.2239 14.7761 14 14.5 14C14.2239 14 14 14.2239 14 14.5C14 14.7761 14.2239 15 14.5 15ZM8.5 11C8.77614 11 9 10.7761 9 10.5C9 10.2239 8.77614 10 8.5 10C8.22386 10 8 10.2239 8 10.5C8 10.7761 8.22386 11 8.5 11ZM9 12.5C9 12.7761 8.77614 13 8.5 13C8.22386 13 8 12.7761 8 12.5C8 12.2239 8.22386 12 8.5 12C8.77614 12 9 12.2239 9 12.5ZM8.5 15C8.77614 15 9 14.7761 9 14.5C9 14.2239 8.77614 14 8.5 14C8.22386 14 8 14.2239 8 14.5C8 14.7761 8.22386 15 8.5 15ZM11 14.5C11 14.7761 10.7761 15 10.5 15C10.2239 15 10 14.7761 10 14.5C10 14.2239 10.2239 14 10.5 14C10.7761 14 11 14.2239 11 14.5ZM12.5 15C12.7761 15 13 14.7761 13 14.5C13 14.2239 12.7761 14 12.5 14C12.2239 14 12 14.2239 12 14.5C12 14.7761 12.2239 15 12.5 15Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
                     </svg>
@@ -556,7 +602,7 @@ function App() {
                     onClick={downloadRecording}
                     className={`${
                       isHyundaiShowroom ? 'showroom-button-secondary' : 'restaurant-button-secondary'
-                    } text-sm px-3 py-1 flex items-center justify-center gap-x-1`}
+                    } text-sm px-4 py-2 flex items-center justify-center gap-x-2 min-h-[44px] touch-friendly-btn`}
                   >
                     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M7.50005 1.04999C7.74858 1.04999 7.95005 1.25146 7.95005 1.49999V8.41359L10.1819 6.18179C10.3576 6.00605 10.6425 6.00605 10.8182 6.18179C10.994 6.35753 10.994 6.64245 10.8182 6.81819L7.81825 9.81819C7.64251 9.99392 7.35759 9.99392 7.18185 9.81819L4.18185 6.81819C4.00611 6.64245 4.00611 6.35753 4.18185 6.18179C4.35759 6.00605 4.64251 6.00605 4.81825 6.18179L7.05005 8.41359V1.49999C7.05005 1.25146 7.25152 1.04999 7.50005 1.04999ZM2.5 10C2.77614 10 3 10.2239 3 10.5V12C3 12.5539 3.44565 13 3.99635 13H11.0012C11.5529 13 12 12.5528 12 12V10.5C12 10.2239 12.2239 10 12.5 10C12.7761 10 13 10.2239 13 10.5V12C13 13.1041 12.1062 14 11.0012 14H3.99635C2.89019 14 2 13.103 2 12V10.5C2 10.2239 2.22386 10 2.5 10Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>

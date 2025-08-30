@@ -87,7 +87,7 @@ function Transcript({
         {/* Transcript Content */}
         <div
           ref={transcriptRef}
-          className="overflow-auto flex flex-col gap-y-4 h-full"
+          className="overflow-auto flex flex-col gap-y-4 h-full transcript-content selectable-text"
         >
           {[...transcriptItems]
             .sort((a, b) => a.createdAtMs - b.createdAtMs)
@@ -262,13 +262,13 @@ function Transcript({
               onSendMessage();
             }
           }}
-          className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
+          className="flex-1 px-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-200 text-base min-h-[48px]"
           placeholder="Type your order or message here..."
         />
         <button
           onClick={onSendMessage}
           disabled={!canSend || !userText.trim()}
-          className="showroom-button disabled:opacity-50 disabled:cursor-not-allowed px-4 py-3"
+          className="showroom-button disabled:opacity-50 disabled:cursor-not-allowed px-4 py-4 min-h-[48px] min-w-[48px]"
         >
           <Image src="arrow.svg" alt="Send" width={20} height={20} />
         </button>
