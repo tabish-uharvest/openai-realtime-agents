@@ -82,6 +82,7 @@ function App() {
   }, [sdkAudioElement]);
 
   const {
+    isSecureContext,
     connect,
     disconnect,
     sendUserText,
@@ -218,11 +219,23 @@ function App() {
             addTranscriptBreadcrumb,
           },
         });
-      } catch (err) {
-        console.error("Error connecting via SDK:", err);
+      } catch (error: any) {
+        console.error('Connection failed:', error);
         setSessionStatus("DISCONNECTED");
+        
+        // Show user-friendly error message
+        alert(
+          '🚨 Connection Failed\n\n' +
+          (error.message?.includes('HTTPS or localhost') 
+            ? '🔒 Realtime voice features require a secure connection.\n\n' +
+              '✅ Solutions:\n' +
+              '• Use http://localhost:3002 (recommended for development)\n' +
+              '• Or setup HTTPS for LAN access\n\n' +
+              '🔧 Current URL: ' + window.location.href
+            : 'Failed to connect to voice assistant: ' + (error.message || error)
+          )
+        );
       }
-      return;
     }
   };
 
@@ -485,6 +498,33 @@ function App() {
         </div>
       </header>
 
+      {/* Security Context Warning Banner */}
+      {!isSecureContext && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-yellow-700">
+                  <strong>⚠️ Limited functionality:</strong> Voice features require a secure connection. 
+                  <span className="font-medium"> Use http://localhost:3002 for full voice functionality.</span>
+                </p>
+              </div>
+            </div>
+            <button 
+              onClick={() => window.location.href = `http://localhost:3002${window.location.pathname}${window.location.search}`}
+              className="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-3 py-1 rounded text-sm font-medium transition-colors"
+            >
+              Switch to Localhost
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Main Content Area */}
       <main className="container mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -569,6 +609,14 @@ function App() {
                   {sessionStatus === "CONNECTING" && "Connecting..."}
                   {sessionStatus === "DISCONNECTED" && (isHyundaiShowroom ? "🚗 Start Car Consultation" : "🎤 Start Voice Order")}
                 </button>
+                
+                {!isSecureContext && sessionStatus === "DISCONNECTED" && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                    <p className="text-amber-800 text-sm">
+                      <strong>💡 Note:</strong> Voice features work best on <code className="bg-amber-100 px-1 rounded">localhost:3002</code>
+                    </p>
+                  </div>
+                )}
                 
                 {sessionStatus === "CONNECTED" && (
                   <div className={`text-center p-4 rounded-lg border-2 ${
