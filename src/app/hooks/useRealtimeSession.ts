@@ -10,6 +10,14 @@ import { useEvent } from '../contexts/EventContext';
 import { useHandleSessionHistory } from './useHandleSessionHistory';
 import { SessionStatus } from '../types';
 
+// Security context check for WebRTC/microphone APIs
+function isSecureContextOrLocalhost(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.isSecureContext || 
+         window.location.hostname === "localhost" || 
+         window.location.hostname === "127.0.0.1";
+}
+
 export interface RealtimeSessionCallbacks {
   onConnectionChange?: (status: SessionStatus) => void;
   onAgentHandoff?: (agentName: string) => void;
@@ -28,6 +36,25 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
   const [status, setStatus] = useState<
     SessionStatus
   >('DISCONNECTED');
+  const [isSecureContext, setIsSecureContext] = useState<boolean>(false);
+
+  // Check security context on mount
+  useEffect(() => {
+    const secureContext = isSecureContextOrLocalhost();
+    setIsSecureContext(secureContext);
+    
+    console.log('🔒 Security Context Check:', {
+      isSecureContext: window.isSecureContext,
+      hostname: window.location.hostname,
+      protocol: window.location.protocol,
+      canUseRealtime: secureContext,
+      mediaDevicesAvailable: !!(navigator.mediaDevices)
+    });
+
+    if (!secureContext) {
+      console.warn('⚠️ Realtime features disabled: Not running on localhost or HTTPS. WebRTC/microphone APIs are not available.');
+    }
+  }, []);
   const { logClientEvent } = useEvent();
 
   const updateStatus = useCallback(
@@ -118,39 +145,60 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
     }: ConnectOptions) => {
       if (sessionRef.current) return; // already connected
 
+      // Check if we're in a secure context for WebRTC/mic
+      if (!isSecureContextOrLocalhost()) {
+        console.error('❌ Cannot connect: Realtime features require HTTPS or localhost');
+        updateStatus('DISCONNECTED');
+        
+        // Show user-friendly error
+        if (callbacks.onConnectionChange) {
+          callbacks.onConnectionChange('DISCONNECTED');
+        }
+        
+        // Throw error to be caught by UI
+        throw new Error('Realtime features are only available on localhost or HTTPS. Please use http://localhost:3002 or setup HTTPS for LAN access.');
+      }
+
       updateStatus('CONNECTING');
 
-      const ek = await getEphemeralKey();
-      const rootAgent = initialAgents[0];
+      try {
+        const ek = await getEphemeralKey();
+        const rootAgent = initialAgents[0];
 
-      // This lets you use the codec selector in the UI to force narrow-band (8 kHz) codecs to
-      //  simulate how the voice agent sounds over a PSTN/SIP phone call.
-      const codecParam = codecParamRef.current;
-      const audioFormat = audioFormatForCodec(codecParam);
+        // This lets you use the codec selector in the UI to force narrow-band (8 kHz) codecs to
+        //  simulate how the voice agent sounds over a PSTN/SIP phone call.
+        const codecParam = codecParamRef.current;
+        const audioFormat = audioFormatForCodec(codecParam);
 
-      sessionRef.current = new RealtimeSession(rootAgent, {
-        transport: new OpenAIRealtimeWebRTC({
-          audioElement,
-          // Set preferred codec before offer creation
-          changePeerConnection: async (pc: RTCPeerConnection) => {
-            applyCodec(pc);
-            return pc;
+        sessionRef.current = new RealtimeSession(rootAgent, {
+          transport: new OpenAIRealtimeWebRTC({
+            audioElement,
+            // Set preferred codec before offer creation
+            changePeerConnection: async (pc: RTCPeerConnection) => {
+              applyCodec(pc);
+              return pc;
+            },
+          }),
+          model: 'gpt-4o-realtime-preview-2025-06-03',
+          config: {
+            inputAudioFormat: audioFormat,
+            outputAudioFormat: audioFormat,
+            inputAudioTranscription: {
+              model: 'gpt-4o-mini-transcribe',
+            },
           },
-        }),
-        model: 'gpt-4o-realtime-preview-2025-06-03',
-        config: {
-          inputAudioFormat: audioFormat,
-          outputAudioFormat: audioFormat,
-          inputAudioTranscription: {
-            model: 'gpt-4o-mini-transcribe',
-          },
-        },
-        outputGuardrails: outputGuardrails ?? [],
-        context: extraContext ?? {},
-      });
+          outputGuardrails: outputGuardrails ?? [],
+          context: extraContext ?? {},
+        });
 
-      await sessionRef.current.connect({ apiKey: ek });
-      updateStatus('CONNECTED');
+        await sessionRef.current.connect({ apiKey: ek });
+        updateStatus('CONNECTED');
+      } catch (error) {
+        console.error('❌ Connection failed:', error);
+        updateStatus('DISCONNECTED');
+        sessionRef.current = null;
+        throw error;
+      }
     },
     [callbacks, updateStatus],
   );
@@ -197,6 +245,7 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
 
   return {
     status,
+    isSecureContext,
     connect,
     disconnect,
     sendUserText,
