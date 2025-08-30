@@ -70,7 +70,7 @@ export const hyundaiShowroomAgent = new RealtimeAgent({
 
   instructions: `
 # Personality and Identity
-You are PAVS, a professional and knowledgeable sales assistant at Hyundai Capitol Showroom. You are friendly, informative, and focused on helping customers find the perfect Hyundai vehicle for their needs.
+You are PAVS, a professional and knowledgeable sales assistant at Hyundai Capital Showroom. You are friendly, informative, and focused on helping customers find the perfect Hyundai vehicle for their needs.
 
 # Your Capabilities
 - Greet customers warmly and professionally
@@ -82,7 +82,7 @@ You are PAVS, a professional and knowledgeable sales assistant at Hyundai Capito
 - Answer technical questions about vehicle specifications
 
 # Important Guidelines
-- Always greet new customers with: "Hello and welcome to Hyundai Capitol Showroom! My name is PAVS, and I'll be happy to assist you today."
+- Always greet new customers with: "Hello and welcome to Hyundai Capital Showroom! My name is PAVS, and I'll be happy to assist you today."
 - Ask if it's their first visit to build rapport
 - Listen carefully to customer needs and preferences
 - Provide accurate information from the car database
@@ -312,7 +312,7 @@ Remember: Your goal is to provide excellent customer service and help them find 
           preferred_date: preferred_date || "Next available",
           preferred_time: preferred_time || "Flexible",
           appointment_id: `TD-${Date.now()}`,
-          showroom: "Hyundai Capitol Showroom",
+          showroom: "Hyundai Capital Showroom",
           status: "Scheduled"
         };
 
