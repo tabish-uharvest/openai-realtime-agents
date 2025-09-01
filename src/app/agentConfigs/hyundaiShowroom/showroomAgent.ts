@@ -1,4 +1,5 @@
 import { RealtimeAgent, tool } from '@openai/agents/realtime';
+import { robotNavigationTools } from './robotNavigationTools';
 
 // Hyundai car data with detailed specifications
 const CARS_DATA = {
@@ -80,6 +81,9 @@ You are PAVS, a professional and knowledgeable sales assistant at Hyundai Capita
 - Schedule test drives and appointments
 - Provide information about financing options
 - Answer technical questions about vehicle specifications
+- Navigate customers to specific car locations in the showroom using the robotic platform
+- Check navigation status and provide real-time updates during movement
+- Return customers to the main showroom area after viewing cars
 
 # Important Guidelines
 - Always greet new customers with: "Hello and welcome to Hyundai Capital Showroom! My name is PAVS, and I'll be happy to assist you today."
@@ -102,9 +106,19 @@ You have access to complete specifications for:
 2. Ask about their car buying intentions
 3. Understand their specific requirements (family size, budget, usage, fuel preference)
 4. Recommend suitable models with detailed specifications
-5. Offer test drive opportunities
-6. Provide information about financing and next steps
-7. Collect contact details if interested
+5. Offer to take them to see specific cars physically using robot navigation
+6. Provide navigation updates and engage at car locations
+7. Offer test drive opportunities
+8. Provide information about financing and next steps
+9. Collect contact details if interested
+
+# Robot Navigation Guidelines
+- When customers show interest in specific models (Creta, Verna, i20), offer to take them to see the car physically
+- Always ask for confirmation before navigating: "Would you like me to take you to see the [car name]?"
+- Provide updates during navigation: "We are on our way to the [car name]..."
+- Upon arrival, engage customers with the physical car and its features
+- After viewing, wait about 10 seconds then ask: "Shall I take you back to the main area?"
+- Monitor robot status and handle any navigation issues professionally
 
 # Key Questions to Ask
 - "Are you considering buying a new car soon?"
@@ -387,7 +401,10 @@ Remember: Your goal is to provide excellent customer service and help them find 
           note: "Final rates subject to bank approval and credit score. Please visit showroom for exact calculations."
         };
       },
-    })
+    }),
+
+    // Robot Navigation Tools
+    ...robotNavigationTools
   ],
 
   handoffs: [], // No handoffs needed for car showroom agent

@@ -8,6 +8,8 @@ import Image from "next/image";
 import Transcript from "./components/Transcript";
 import Events from "./components/Events";
 import { FullscreenButton } from "./components/FullscreenButton";
+import { RobotNavigationStatus } from "./components/RobotNavigationStatus";
+import { RobotAPITester } from "./components/RobotAPITester";
 
 // Types
 import { SessionStatus } from "@/app/types";
@@ -717,6 +719,14 @@ function App() {
                 </div>
               )}
             </div>
+
+            {/* Robot Navigation Status (for Hyundai Showroom) */}
+            {isHyundaiShowroom && (
+              <>
+                <RobotNavigationStatus />
+                <RobotAPITester />
+              </>
+            )}
 
             {/* Audio Controls */}
             <div className={isHyundaiShowroom ? "showroom-card p-6" : "restaurant-card p-6"}>
