@@ -37,7 +37,5 @@ app.prepare().then(() => {
     })
     .listen(port, () => {
       console.log(`> Ready on https://${hostname}:${port}`)
-      console.log(`> LAN access: https://192.168.0.126:${port}`)
-      console.log('> 🚗 Hyundai Showroom with full voice functionality!')
     })
 })
