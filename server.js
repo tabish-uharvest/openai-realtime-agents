@@ -6,7 +6,7 @@ const path = require('path')
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = 'localhost'
-const port = 3000
+const port = 3001
 
 // Initialize Next.js
 const app = next({ dev, hostname, port })
